@@ -1,23 +1,17 @@
 class Solution {
 public:
     int numberOfSubarrays(vector<int>& nums, int k) {
-        unordered_map<int, int> prefixCount;
-        prefixCount[0] = 1;
-    
-        int oddCount = 0, result = 0;
-        
-        for (int num : nums) {
-            oddCount += num & 1;
-            result += prefixCount[oddCount - k];
-            prefixCount[oddCount]++;
+        int n = nums.size();
+        vector<int> cnt(n + 1, 0);
+        cnt[0] = 1;
+        int ans = 0, t = 0;
+        for (int v : nums) {
+            t += v & 1;
+            if (t - k >= 0) {
+                ans += cnt[t - k];
+            }
+            cnt[t]++;
         }
-        
-        return result;
+        return ans;
     }
 };
-
-/*
-
-[1,1,0,1,1] k=3
-[1,2,2,3,4]
-*/
