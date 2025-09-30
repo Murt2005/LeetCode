@@ -1,10 +1,6 @@
 class Solution {
 public:
     int numberOfSubarrays(vector<int>& nums, int k) {
-        for (int i = 0; i < nums.size(); i++) {
-            nums[i] %= 2;
-        }
-
         unordered_map<int, int> prefixSumFreq;
         prefixSumFreq[0] = 1;
 
@@ -12,7 +8,7 @@ public:
         int count = 0;
 
         for (int num : nums) {
-            currentSum += num;
+            currentSum += (num % 2);
 
             if (prefixSumFreq.contains(currentSum - k)) {
                 count += prefixSumFreq[currentSum - k];
@@ -20,7 +16,7 @@ public:
 
             prefixSumFreq[currentSum]++;
         }
-        
+
         return count;
     }
 };
