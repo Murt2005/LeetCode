@@ -17,7 +17,7 @@ public:
             } else if (wordFreq.contains(reverse)) {
                 int pairs = min(count, wordFreq[reverse]);
                 longestLength += pairs * 4;
-                wordFreq[reverse] = 0;
+                wordFreq[word] = 0;
             }
         }
         if (hasMiddle) longestLength += 2;
