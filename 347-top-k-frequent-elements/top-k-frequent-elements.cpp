@@ -6,19 +6,24 @@ public:
             freqCount[num]++;
         }
 
-        vector<vector<int>> bucket(nums.size() + 1);
+        auto cmp = [](pair<int, int>& a, pair<int, int>& b) {
+            return a.first > b.first;
+        };
+
+        priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(cmp)> minHeap(cmp);
+
         for (const auto& [num, freq] : freqCount) {
-            bucket[freq].push_back(num);
+            minHeap.push({freq, num});
+            if (minHeap.size() > k) {
+                minHeap.pop();
+            }
         }
 
         vector<int> result;
-        for (int i = bucket.size() - 1; i >= 0 && result.size() < k; i--) {
-            for (int num : bucket[i]) {
-                result.push_back(num);
-                if (result.size() == k) {
-                    return result;
-                }
-            }
+        
+        while (!minHeap.empty()) {
+            result.push_back(minHeap.top().second);
+            minHeap.pop();
         }
 
         return result;
