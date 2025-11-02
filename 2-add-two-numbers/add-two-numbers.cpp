@@ -37,7 +37,9 @@ public:
             }
         }
 
-        return dummy->next;
+        ListNode* result = dummy->next;
+        delete dummy;
+        return result;
     }
 };
 
