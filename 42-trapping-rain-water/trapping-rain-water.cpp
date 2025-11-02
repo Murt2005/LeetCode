@@ -2,32 +2,60 @@ class Solution {
 public:
     int trap(vector<int>& height) {
         int n = height.size();
-        vector<int> maxLeft(n, 0);
-        vector<int> maxRight(n, 0);
-
-        int maxL = 0;
-        for (int i = 1; i < n; i++) {
-            maxL = max(maxL, height[i - 1]);
-            maxLeft[i] = maxL;
-        }
-
-        int maxR = 0;
-        for (int i = n - 2; i >= 0; i--) {
-            maxR = max(maxR, height[i + 1]);
-            maxRight[i] = maxR;
-        }
-
+        int leftMax = height[0];
+        int rightMax = height[n - 1];
         int totalWater = 0;
-        for (int i = 0; i < n; i++) {
-            int water = min(maxLeft[i], maxRight[i]) - height[i];
-            if (water > 0) {
-                totalWater += water;
+        int left = 0;
+        int right = n - 1;
+
+        while (left < right) {
+            if (leftMax < rightMax) {
+                left++;
+                leftMax = max(leftMax, height[left]);
+                totalWater += leftMax - height[left];
+            } else {
+                right--;
+                rightMax = max(rightMax, height[right]);
+                totalWater += rightMax - height[right];
             }
         }
+        
 
         return totalWater;
     }
 };
+
+
+// class Solution {
+// public:
+//     int trap(vector<int>& height) {
+//         int n = height.size();
+//         vector<int> maxLeft(n, 0);
+//         vector<int> maxRight(n, 0);
+
+//         int maxL = 0;
+//         for (int i = 1; i < n; i++) {
+//             maxL = max(maxL, height[i - 1]);
+//             maxLeft[i] = maxL;
+//         }
+
+//         int maxR = 0;
+//         for (int i = n - 2; i >= 0; i--) {
+//             maxR = max(maxR, height[i + 1]);
+//             maxRight[i] = maxR;
+//         }
+
+//         int totalWater = 0;
+//         for (int i = 0; i < n; i++) {
+//             int water = min(maxLeft[i], maxRight[i]) - height[i];
+//             if (water > 0) {
+//                 totalWater += water;
+//             }
+//         }
+
+//         return totalWater;
+//     }
+// };
 
 
 /*
