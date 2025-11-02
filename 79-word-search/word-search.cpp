@@ -28,6 +28,25 @@ public:
         ROWS = board.size();
         COLS = board[0].size();
 
+        unordered_map<char, int> boardCount, wordCount;
+
+        for (const auto& row : board) {
+            for (char c : row) {
+                boardCount[c]++;
+            }
+        }
+
+        for (char c : word) {
+            wordCount[c]++;
+            if (wordCount[c] > boardCount[c]) {
+                return false;
+            }
+        }
+
+        if (boardCount[word[0]] > boardCount[word.back()]) {
+            reverse(word.begin(), word.end());
+        }
+
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
                 if (board[row][col] == word[0]) {
