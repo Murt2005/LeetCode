@@ -1,20 +1,19 @@
 class Solution {
 private:
-    bool dfs(int node, const vector<vector<int>>& adj, vector<bool>& visited, vector<bool>& path) {
-        visited[node] = true;
-        path[node] = true;
-
-        for (int next : adj[node]) {
-            if (!visited[next]) {
-                if (dfs(next, adj, visited, path)) {
-                    return true;
-                }
-            } else if (path[next]) {
-                return true;
-            }
+    bool isCycle(vector<vector<int>>& adj, vector<int>& visited, int i) {
+        if (visited[i] == 1) {
+            return true;
         }
 
-        path[node] = false;
+        if (visited[i] == 0) {
+            visited[i] = 1;
+            for (const auto& next : adj[i]) {
+                if (isCycle(adj, visited, next)) {
+                    return true;
+                }
+            }
+        }
+        visited[i] = 2;
         return false;
     }
 
@@ -25,16 +24,14 @@ public:
             adj[pre[1]].push_back(pre[0]);
         }
 
-        vector<bool> visited(numCourses, false);
-        vector<bool> path(numCourses, false);
+        vector<int> visited(numCourses, 0);
 
         for (int i = 0; i < numCourses; i++) {
-            if (!visited[i]) {
-                if (dfs(i, adj, visited, path)) {
-                    return false;
-                }
+            if (isCycle(adj, visited, i)) {
+                return false;
             }
         }
+
         return true;
     }
 };
