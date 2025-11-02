@@ -4,20 +4,22 @@ public:
         vector<vector<string>> result;
         unordered_map<string, vector<string>> mp;
 
-        for (auto s: strs) {
+        for (const auto& s: strs) {
             string temp = s;
             sort(temp.begin(), temp.end());
             mp[temp].push_back(s);
         }
 
-        for (auto pair : mp) {
-            auto vec = pair.second;
+        for (auto& [key, vec] : mp) {
             result.push_back(vec);
         }
 
         return result;
     }
 };
+
+// Time Complexity: O(N * klogk) where k is the max length of a string
+// Space Complexity: O(N)
 
 
 /*
