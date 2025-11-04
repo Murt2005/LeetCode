@@ -1,26 +1,25 @@
 class Solution {
 public:
     vector<string> letterCombinations(string digits) {
-        backtrack(digits, 0, "");
-
+        backtrack(digits, "", 0);
         return result;
-
     }
 
 private:
     vector<string> result;
-    vector<string> digitToChar = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+    vector<string> digitsToChar = {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
 
-    void backtrack(string& digits, int i, string curr) {
+    void backtrack(string& digits, string curr, int i) {
         if (i >= digits.length()) {
             result.push_back(curr);
             return;
         }
 
-        string chars = digitToChar[digits[i] - '0'];
+        string chars = digitsToChar[digits[i] - '0'];
+
         for (char c : chars) {
             curr.push_back(c);
-            backtrack(digits, i + 1, curr);
+            backtrack(digits, curr, i + 1);
             curr.pop_back();
         }
     }
