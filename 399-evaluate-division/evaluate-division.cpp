@@ -1,63 +1,65 @@
 class Solution {
 public:
     vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) {
-        int n = equations.size();
-        int m = queries.size();
-        vector<double> ans(m);
+        int numEquations = equations.size();
+        int numQueries = queries.size();
+        vector<double> result(numQueries);
 
-        for (int i = 0; i < n; i++) {
-            adjList[equations[i][0]].push_back({equations[i][1], values[i]});
-            adjList[equations[i][1]].push_back({equations[i][0], 1 / values[i]});
-            visited[equations[i][0]] = false;
-            visited[equations[i][1]] = false;
-        }
+        buildGraph(equations, values);
 
-        for (int i = 0; i < m; i++) {
-            queryAns = 1;
-            
-            if (adjList.find(queries[i][0]) == adjList.end() || adjList.find(queries[i][1]) == adjList.end()) {
-                ans[i] = -1;
+        for (int i = 0; i < numQueries; i++) {
+            string startNode = queries[i][0];
+            string endNode = queries[i][1];
+
+            if (graph.find(startNode) == graph.end() || graph.find(endNode) == graph.end()) {
+                result[i] = -1.0;
                 continue;
             }
-            
-            bool pathFound = dfs(queries[i][0], queries[i][1], 1);
-            if (!pathFound) {
-                ans[i] = -1;
-            } else {
-                ans[i] = queryAns;
-            }
+
+            visited.clear();
+            double ratio = -1.0;
+            bool pathExists = findPath(startNode, endNode, 1.0, ratio);
+            result[i] = pathExists ? ratio : -1.0;
         }
 
-        return ans;
+        return result;
     }
 
 private:
-    unordered_map<string, vector<pair<string, double>>> adjList;
-    unordered_map<string, bool> visited;
-    double queryAns;
+    unordered_map<string, vector<pair<string, double>>> graph;
+    unordered_set<string> visited;
 
-    bool dfs(string& startNode, string& endNode, double runningProduct) {
-        if (startNode == endNode) {
-            queryAns = runningProduct;
+    void buildGraph(vector<vector<string>>& equations, vector<double>& values) {
+        for (int i = 0; i < equations.size(); i++) {
+            string startNode = equations[i][0];
+            string endNode = equations[i][1];
+            double quotient = values[i];
+
+            graph[startNode].push_back({endNode, quotient});
+            graph[endNode].push_back({startNode, 1 / quotient});
+        }
+    }
+
+    bool findPath(const string& currentNode, const string& endNode, double accumulatedProduct, double& result) {
+        if (currentNode == endNode) {
+            result = accumulatedProduct;
             return true;
         }
 
+        visited.insert(currentNode);
 
-        bool tempAns = false;
-        visited[startNode] = true;
-
-        for (int next = 0; next < adjList[startNode].size(); next++) {
-            if (!visited[adjList[startNode][next].first]) {
-                tempAns = dfs(adjList[startNode][next].first, endNode, runningProduct * adjList[startNode][next].second);;
-                if (tempAns) {
-                    break;
+        for (const auto& [neighborNode, edgeWeight] : graph[currentNode]) {
+            if (visited.find(neighborNode) == visited.end()) {
+                double newProduct = accumulatedProduct * edgeWeight;
+                
+                if (findPath(neighborNode, endNode, newProduct, result)) {
+                    return true;
                 }
             }
         }
 
-        visited[startNode] = false;
+        visited.erase(currentNode);
 
-        return tempAns;
+        return false;
     }
-
 };
