@@ -1,35 +1,53 @@
 class MinStack {
 private:
-    stack<int> stck;
-    stack<int> minStck;
+    struct Node {
+        int val;
+        int minSoFar;
+        Node* next;
+
+        Node(int v, int m, Node* n = nullptr)
+            : val(v)
+            , minSoFar(m)
+            , next(n)
+        { }
+    };
+
+    Node* head;
 
 public:
-    MinStack() {
-        
+    MinStack() : head(nullptr) { }
+
+    ~MinStack() {
+        while (head) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+        }
     }
     
     void push(int val) {
-        stck.push(val);
-        if (minStck.empty() || val <= minStck.top()) {
-            minStck.push(val);
+        if (!head) {
+            head = new Node(val, val);
+        } else {
+            int currentMin = min(val, head->minSoFar);
+            head = new Node(val, currentMin, head);
         }
     }
     
     void pop() {
-        if (stck.top() == minStck.top()) {
-            stck.pop();
-            minStck.pop();
-        } else {
-            stck.pop();
+        if (head) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
         }
     }
     
     int top() {
-        return stck.top();
+        return head->val;
     }
     
     int getMin() {
-        return minStck.top();
+        return head->minSoFar;
     }
 };
 
