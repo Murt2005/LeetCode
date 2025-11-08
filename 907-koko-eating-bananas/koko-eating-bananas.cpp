@@ -1,43 +1,44 @@
 class Solution {
 public:
     int minEatingSpeed(vector<int>& piles, int h) {
-        int k = 0;
-        int n = piles.size();
-        int left = 1;
-        int right = 0;
+        int minSpeed = 1;
+        int maxSpeed = 0;
+
         for (int pile : piles) {
-            right = max(right, pile);   
+            maxSpeed = max(maxSpeed, pile);
         }
 
-        while (left <= right) {
-            int speed = left + (right - left) / 2;
-            int totalHours = 0;
-            for (int i = 0; i < n; i++) {
-                totalHours += (piles[i] % speed == 0) ? piles[i] / speed : piles[i] / speed + 1;
+        while (minSpeed < maxSpeed) {
+            int middleSpeed = (minSpeed + maxSpeed) / 2;
 
-                if (totalHours > h) {
-                    break;
-                }
-            }
-            if (totalHours <= h) {
-                right = speed - 1;
+            if (validateSpeed(piles, h, middleSpeed)) {
+                maxSpeed = middleSpeed;
             } else {
-                left = speed + 1;
+                minSpeed = middleSpeed + 1;
             }
         }
-        return left;
+
+        return maxSpeed;
+    }
+
+private:
+    bool validateSpeed(vector<int>& piles, int h, int middleSpeed) {
+        int hour = 0;
+
+        for (int pile : piles) {
+            hour += (pile % middleSpeed == 0) ? pile / middleSpeed : pile / middleSpeed + 1;
+        }
+
+        return hour <= h;
     }
 };
 
-
 /*
 
-[3,6,7,11]
 
-min: 3
-max: 11
 
-7
+
+
 
 
 */
