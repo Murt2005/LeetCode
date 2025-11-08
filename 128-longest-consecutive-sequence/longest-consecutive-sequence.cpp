@@ -1,43 +1,45 @@
 class Solution {
 public:
     int longestConsecutive(vector<int>& nums) {
-        unordered_set<int> lookup;
+        unordered_set<int> encountered;
 
         for (int num : nums) {
-            lookup.insert(num);
+            encountered.insert(num);
         }
 
-        int maxStreak = 0;
-        for (int num : lookup) {
-            if (lookup.find(num - 1) != lookup.end()) {
+        int longestSequence = 0;
+        for (int num : encountered) {
+            if (encountered.find(num - 1) != encountered.end()) {
                 continue;
+            } else {
+                int currentSequence = 1;
+                while (encountered.find(num + currentSequence) != encountered.end()) {
+                    currentSequence++;
+                }
+                longestSequence = max(longestSequence, currentSequence);
             }
-
-            int streak = 1;
-            while (lookup.find(num + streak) != lookup.end()) {
-                streak++;
-            }
-
-            maxStreak = max(maxStreak, streak);
         }
 
-        return maxStreak;
+        return longestSequence;
     }
 };
 
 /*
-O(NlogN)
 
-[1,2,3,4,100,200]
- 
+given: unsorted arr of ints
 
+return: length of longest consecutive elements
 
-O(N)
+ds:
+- unordered_set<int> vals encountered
 
-[100,4,200,1,3,2]
-
-put all elements in an unordered_set<>
-
+algorithm:
+- iterate through input arr and store vals in the encountered set
+- iterate through the encountered set, to prevent checking duplicate vals
+  - check is this the start of a sequence? check by checking if nums[i] - 1 is in the set
+  - if it is not the start of a sequence, skip it
+  - if it is, keep track of how long that sequence goes for
+  - return the max sequence found
 
 
 
