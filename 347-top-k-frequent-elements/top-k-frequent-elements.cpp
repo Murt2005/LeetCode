@@ -2,37 +2,68 @@ class Solution {
 public:
     vector<int> topKFrequent(vector<int>& nums, int k) {
         unordered_map<int, int> freqMap; // val -> freq
-        
-        
-        auto cmp = [](const auto& a, const auto& b) {
-            return a.second > b.second;
-        };
-        
-        priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(cmp)> minHeap(cmp);
 
         for (int num : nums) {
             freqMap[num]++;
-        }        
+        }
+
+        int n = nums.size();
+        vector<vector<int>> bucket(n + 1);
+
+        for (const auto& [val, freq] : freqMap) {
+            bucket[freq].push_back(val);
+        }
 
         vector<int> result;
 
-        for (const auto& pair : freqMap) {
-            minHeap.push(pair);
-            if (minHeap.size() > k) {
-                minHeap.pop();
+        for (int freq = nums.size(); freq >= 0 && result.size() < k; freq--) {
+            for (int num : bucket[freq]) {
+                result.push_back(num);
+                if (result.size() == k) {
+                    return result;
+                }
             }
-        }
-
-        while (!minHeap.empty()) {
-            auto pair = minHeap.top();
-            minHeap.pop();
-            int val = pair.first;
-            result.push_back(val);
         }
 
         return result;
     }
 };
+
+// class Solution {
+// public:
+//     vector<int> topKFrequent(vector<int>& nums, int k) {
+//         unordered_map<int, int> freqMap; // val -> freq
+        
+        
+//         auto cmp = [](const auto& a, const auto& b) {
+//             return a.second > b.second;
+//         };
+        
+//         priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(cmp)> minHeap(cmp);
+
+//         for (int num : nums) {
+//             freqMap[num]++;
+//         }        
+
+//         vector<int> result;
+
+//         for (const auto& pair : freqMap) {
+//             minHeap.push(pair);
+//             if (minHeap.size() > k) {
+//                 minHeap.pop();
+//             }
+//         }
+
+//         while (!minHeap.empty()) {
+//             auto pair = minHeap.top();
+//             minHeap.pop();
+//             int val = pair.first;
+//             result.push_back(val);
+//         }
+
+//         return result;
+//     }
+// };
 
 /*
 
