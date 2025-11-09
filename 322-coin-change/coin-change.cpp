@@ -1,35 +1,32 @@
 class Solution {
 public:
     int coinChange(vector<int>& coins, int amount) {
-        unordered_map<int, int> memo; // amount -> min coins
+        vector<int> memo(amount + 1, -2);
+        memo[0] = 0;
         return helper(coins, amount, memo);
     }
 
 private:
-    int helper(vector<int>& coins, int amount, unordered_map<int, int>& memo) {
-        if (amount == 0) {
-            return 0;
-        }
-
+    int helper(vector<int>& coins, int amount, vector<int>& memo) {
         if (amount < 0) {
             return -1;
         }
-
-        if (memo.find(amount) != memo.end()) {
+        
+        if (memo[amount] != -2) {
             return memo[amount];
         }
 
-        int minCoins = INT_MAX;
+        int minVal = INT_MAX;
 
-        for (int i = 0; i < coins.size(); i++) {
-            int result = helper(coins, amount - coins[i], memo);
+        for (int coin : coins) {
+            int result = helper(coins, amount - coin, memo);
 
             if (result != -1) {
-                minCoins = min(minCoins, result + 1);
+                minVal = min(minVal, result + 1);
             }
         }
 
-        memo[amount] = (minCoins == INT_MAX) ? -1 : minCoins;
+        memo[amount] = (minVal == INT_MAX) ? -1 : minVal;
         return memo[amount];
     }
 };
