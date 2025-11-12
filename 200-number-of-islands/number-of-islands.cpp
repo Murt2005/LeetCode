@@ -33,6 +33,7 @@ private:
             int newCol = col + directions[d][1];
 
             if (newRow >= 0 && newCol >= 0 && newRow < ROWS && newCol < COLS && grid[newRow][newCol] == '1') {
+                grid[newRow][newCol] = '0';
                 dfs(grid, newRow, newCol);
             }
         }
