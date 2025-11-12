@@ -1,10 +1,12 @@
+// Time Complexity: O(N * klogk)
+// Space Complexity: O(N)
 class Solution {
 public:
     vector<vector<string>> groupAnagrams(vector<string>& strs) {
         vector<vector<string>> result;
         unordered_map<string, vector<string>> anagrams;
 
-        for (string s : strs) {
+        for (auto& s : strs) {
             string temp = s;
             sort(s.begin(), s.end());
             anagrams[s].push_back(temp);
