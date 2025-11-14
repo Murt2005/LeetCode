@@ -18,22 +18,21 @@ public:
                 }
             }
         }
-        queue<tuple<int, int, int>> q;
-        set<tuple<int, int, int>> visited;
+        queue<tuple<int, int, string>> q;
+        set<tuple<int, int, string>> visited;
         
-        q.push({startRow, startCol, 0});
-        visited.insert({startRow, startCol, 0});
+        q.push({startRow, startCol, ""});
+        visited.insert({startRow, startCol, ""});
 
         int moves = 0;
-        int allKeysMask = (1 << totalKeys) - 1;
 
         while (!q.empty()) {
             int size = q.size();
             for (int s = 0; s < size; s++) {
-                auto [row, col, keysMask] = q.front();
+                auto [row, col, keys] = q.front();
                 q.pop();
 
-                if (keysMask == allKeysMask) {
+                if (keys.length() == totalKeys) {
                     return moves;
                 }
                 for (int d = 0; d < 4; d++) {
@@ -50,18 +49,20 @@ public:
                         continue;
                     }
 
-                    int newKeysMask = keysMask;
+                    string newKeys = keys;
 
                     if (islower(cell)) {
-                        int keyIndex = cell - 'a';
-                        newKeysMask |= (1 << keyIndex);
+                        if (keys.find(cell) == string::npos) {
+                            newKeys += cell;
+                            sort(newKeys.begin(), newKeys.end());
+                        }
                     } else if (isupper(cell)) {
-                        int keyIndex = cell - 'A';
-                        if (!(keysMask & (1 << keyIndex))) {
+                        char neededKey = tolower(cell);
+                        if (keys.find(neededKey) == string::npos) {
                             continue;
                         }
                     }
-                    tuple<int, int, int> newState = {newRow, newCol, newKeysMask};
+                    tuple<int, int, string> newState = {newRow, newCol, newKeys};
                     if (visited.find(newState) == visited.end()) {
                         visited.insert(newState);
                         q.push(newState);
