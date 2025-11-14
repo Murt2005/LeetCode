@@ -12,8 +12,8 @@ public:
             return 1;
         }
 
-        vector<vector<bool>> visited(ROWS, vector<bool>(COLS, false));
         queue<pair<int, int>> q;
+        grid[0][0] = 1;
         q.push({0,0});
         int shortestPath = 0;
 
@@ -25,19 +25,17 @@ public:
                 int x = cell.first;
                 int y = cell.second;
 
-                if (x == ROWS - 1 && y == COLS - 1 && grid[x][y] == 0) {
+                if (x == ROWS - 1 && y == COLS - 1) {
                     return shortestPath + 1;
                 }
-
-                visited[x][y] = true;
 
                 for (int d = 0; d < 8; d++) {
                     int newX = x + directions[d][0];
                     int newY = y + directions[d][1];
 
-                    if (newX >= 0 && newY >= 0 && newX < ROWS && newY < COLS && !visited[newX][newY] && grid[newX][newY] == 0) {
+                    if (newX >= 0 && newY >= 0 && newX < ROWS && newY < COLS && grid[newX][newY] == 0) {
                         q.push({newX, newY});
-                        visited[newX][newY] = true;
+                        grid[newX][newY] = 1;
                     }
                 }
             }
