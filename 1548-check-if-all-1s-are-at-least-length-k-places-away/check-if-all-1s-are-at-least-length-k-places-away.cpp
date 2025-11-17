@@ -16,8 +16,6 @@ public:
             } else if (nums[i] == 1) {
                 lastSeenIdx = i;
             }
-
-            cout << i << ' ' << lastSeenIdx << endl;
         }
 
         return true;
