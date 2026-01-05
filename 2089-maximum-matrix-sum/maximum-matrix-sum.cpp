@@ -9,15 +9,15 @@ public:
 
         for (int row = 0; row < n; row++) {
             for (int col = 0; col < n; col++) {
-                if (matrix[row][col] < 0) {
+                int val = matrix[row][col];
+                int absVal = abs(val);
+                
+                if (val < 0) {
                     numberOfNegatives++;
                 }
 
-                if (abs(matrix[row][col]) < smallestAbsVal) {
-                        smallestAbsVal = abs(matrix[row][col]);
-                    }
-
-                matrixSum += abs(matrix[row][col]);
+                smallestAbsVal = min(smallestAbsVal, absVal);
+                matrixSum += absVal;
             }
         }
 
