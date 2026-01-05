@@ -21,11 +21,11 @@ public:
             }
         }
 
-        if (numberOfNegatives % 2 == 0) {
-            return matrixSum;
+        if (numberOfNegatives % 2 == 1) {
+            return matrixSum - 2 * smallestAbsVal;
         }
 
-        return matrixSum - 2 * smallestAbsVal;
+        return matrixSum;
     }
 };
 
