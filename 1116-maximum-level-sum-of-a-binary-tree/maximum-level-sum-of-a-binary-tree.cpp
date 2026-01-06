@@ -9,63 +9,45 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
-
 class Solution {
 public:
     int maxLevelSum(TreeNode* root) {
-        vector<long long> levelSums;
-        dfs(root, 0, levelSums);
+        int result = 0;
+        int biggestSum = INT_MIN;
+        int currentLevel = 1;
 
-        int maxLevel = 0;
-        long long maxSum = levelSums[0];
+        queue<TreeNode*> q;
 
-        for (int i = 1; i < levelSums.size(); i++) {
-            if (levelSums[i] > maxSum) {
-                maxSum = levelSums[i];
-                maxLevel = i;
+        q.push(root);
+
+        while (!q.empty()) {
+            int qSize = q.size();
+
+            int levelSum = 0;
+
+            for (int s = 0; s < qSize; s++) {
+                TreeNode* node = q.front();
+                q.pop();
+                levelSum += node->val;
+
+                if (node->left) {
+                    q.push(node->left);
+                }
+
+                if (node->right) {
+                    q.push(node->right);
+                }
             }
-        }
-        return maxLevel + 1;
-    }
 
-private:
-    void dfs(TreeNode* node, int level, vector<long long>& levelSums) {
-        if (!node) return;
+            if (levelSum > biggestSum) {
+                biggestSum = levelSum;
+                result = currentLevel;
+            }
 
-        if (level >= levelSums.size()) {
-            levelSums.push_back(0);
+            currentLevel++;
         }
 
-        levelSums[level] += node->val;
-        dfs(node->left, level + 1, levelSums);
-        dfs(node->right, level + 1, levelSums);
+
+        return result;
     }
 };
-
-// class Solution {
-// public:
-//     int maxLevelSum(TreeNode* root) {
-//         int maxLevelSum = INT_MIN;
-//         int level = 1;
-//         int result = 0;
-//         queue<TreeNode*> q;
-//         q.push(root);
-//         while (!q.empty()) {
-//             int queueSize = q.size();
-//             int levelSum = 0;
-//             for (int s = 0; s < queueSize; s++) {
-//                 TreeNode* node = q.front();
-//                 q.pop();
-//                 levelSum += node->val;
-//                 if (node->left) q.push(node->left);
-//                 if (node->right) q.push(node->right);
-//             }
-//             if (levelSum > maxLevelSum) {
-//                 maxLevelSum = levelSum;
-//                 result = level;
-//             }
-//             level++;
-//         }
-//         return result;
-//     }
-// };
